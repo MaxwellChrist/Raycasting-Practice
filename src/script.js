@@ -38,6 +38,11 @@ object3.position.x = 2
 scene.add(object1, object2, object3)
 
 /**
+ * Raycaster
+ */
+const raycaster = new THREE.Raycaster()
+
+/**
  * Sizes
  */
 const sizes = {
@@ -89,6 +94,27 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    // Updating raycaster in tick function
+    const rayOrigin = new THREE.Vector3(-3, 0, 0)
+    const rayDirection = new THREE.Vector3(10, 0, 0)
+    rayDirection.normalize()
+    raycaster.set(rayOrigin, rayDirection)
+
+    // Shoot the ray
+    const objects = [object1, object2, object3]
+    const intersects = raycaster.intersectObjects(objects)
+    for (let o of objects) {
+        o.material.color.set(`#ff0000`)
+    }
+    for (let i of intersects) {
+        i.object.material.color.set(`#0000ff`)
+    }
+
+    // Animate objects
+    object1.position.y = Math.sin(elapsedTime * 0.2) * 2
+    object2.position.y = Math.sin(elapsedTime * 0.4) * 2 
+    object3.position.y = Math.sin(elapsedTime * 0.6) * 2
 
     // Update controls
     controls.update()
